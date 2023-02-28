@@ -1,0 +1,19 @@
+{
+  "name": "api-thepiratebay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@robertklep/qbittorrent": "^1.0.1",
+    "discord.js": "^14.7.1",
+    "fs": "^0.0.1-security",
+    "prompt-sync": "^4.2.0",
+    "qbittorrent-api-v2": "^1.2.2",
+    "torrent-search-api": "^2.1.4"
+  }
+}
