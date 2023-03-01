@@ -1,16 +1,21 @@
 const TorrentSearchApi      = require('torrent-search-api');
 const { qBittorrentClient } = require('@robertklep/qbittorrent');
+const config = require('./config');
 
-const client = new qBittorrentClient('http://127.0.0.1:8080', 'admin', 'PUT UR PASSWORD');
+// QBittorent Connexion
+const client = new qBittorrentClient('http://127.0.0.1:8080', 'admin', config.qbt_password);
 
+// Discord needed libs
 const discord = require('discord.js');
 const { Events, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const config = require('./config');
 const intents = new discord.IntentsBitField(3276799)
 const bot = new discord.Client({intents});
 
+// reference my needed variables to access them everywhere in the code
 let providerList = ["Torrent9", "ThePirateBay", "1337x"];
-let magnets = [];
+let searchList = [];
+let magnets = []
+let choosedMagnet;
 
 bot.login(config.token);
 
@@ -19,6 +24,7 @@ bot.on('ready', async () => {
     bot.on(Events.MessageCreate, async interaction => {
         if (interaction.content === '!provider') {
             const options = [];
+            // Creating a select menu for the providers
             providerList.forEach(provider => {
                 const option = {
                     label: provider,
@@ -42,10 +48,14 @@ bot.on('ready', async () => {
     bot.on(Events.InteractionCreate, async interaction => {
         if (!interaction.isStringSelectMenu()) return;
 
+        // Asking for the user type !searchTorrent
         if (providerList.includes(interaction.values[0])) {
             TorrentSearchApi.enableProvider(interaction.values);
             await interaction.reply('Now enter **!search torrentName** to search For a Film or a Serie');
         } else {
+            // When the user select a torrent from the list after the search
+            choosedMagnet = magnets[interaction.values[0]];
+
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
@@ -72,19 +82,17 @@ bot.on('ready', async () => {
     bot.on(Events.InteractionCreate, async interaction => {
         if (!interaction.isButton()) return;
 
+        // Confirm button to download or cancel
         if (interaction.customId[0] == "d") {
-            client.torrents.add(magnets[0]);
-    
-            interaction.reply("Downloading...");
-            await interaction.channel.send("Use **!download** to see the infos");
+            client.torrents.add(choosedMagnet);
+
+            await interaction.reply(`Use **!download** to see the infos of *${searchList[magnets.indexOf(choosedMagnet)].label}*`);
         } else {
-           await interaction.reply('Download Cancelled !');
+           await interaction.reply('Torrent Cancelled !');
         }
 
 
     });
-
-    TorrentSearchApi.enableProvider("ThePirateBay");
 
     bot.on(Events.MessageCreate, async searchQuery => {
         if (searchQuery.content.startsWith('!search')) {
@@ -93,32 +101,42 @@ bot.on('ready', async () => {
                 searchQuery.reply('You have to use **!provider** before using this command');
             } else {
                 searchQuery.reply('Searching...')
-                                                                                                                                                                                                                                                                                                                                                                                             
+
+                // Cutting the '!search torrentName' string to return only 'torrentName'
                 query = searchQuery.content.substring(8);
 
-                TorrentSearchApi.search(query, 'All', 5)
+                // Searching torrent on the selected provider
+                TorrentSearchApi.search(query, 'All', 10)
                     .then(torrents => {
                         if (torrents.length === 0 || torrents[0].size === "0 B") {
                             searchQuery.reply("No result !");
                         } else {
-                            let first = torrents[0];
-                            TorrentSearchApi.getMagnet(first)
-                            .then(async magnet =>  {
-                                magnets = [magnet];
-                                const searched = new ActionRowBuilder()
-                                        .addComponents(
-                                            new StringSelectMenuBuilder()
-                                                .setCustomId('select')
-                                                .setPlaceholder('Select your torrent')
-                                                .addOptions({
-                                                    label: `${first.title}`,
-                                                    description: `Size: ${first.size} | Seeds: ${first.seeds}`,
-                                                    value: `0`,
-                                                })
-                                        );
+                            // Creating a select menu to choose the torrent from the search response
+                            const searched = new StringSelectMenuBuilder()
+                                        .setCustomId('select')
+                                        .setPlaceholder('Select your torrent')
 
-                                    await searchQuery.reply({ components: [searched] });
-                            });
+                            // for loop to set all of the returned torrents to the select menu options
+                            for (let i = 0; i < torrents.length; i++) {
+                                TorrentSearchApi.getMagnet(torrents[i])
+                                .then(async magnet =>  {
+                                    magnets.push(magnet);
+                                    searchList.push({ 
+                                        label: `${torrents[i].title}`, 
+                                        description: `${torrents[i].size} GB | ${torrents[i].seeds} seeds`,
+                                        value: `${i}`});
+
+                                    await searched.addOptions(searchList[i]);
+
+                                    if (i === 0) {
+                                        // Send the select menu and the number of result to the discord server
+                                        const torrentsMenu = new ActionRowBuilder()
+                                            .addComponents(searched);
+                                    
+                                        await searchQuery.reply({content: `${searchList.length} Result !` ,components: [torrentsMenu] });
+                                    }
+                                    });
+                            };
                         }
                     });
                     
