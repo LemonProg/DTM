@@ -7,5 +7,4 @@ Using :
 - qBittorent API to download the torrents
 
 Some issues :
-- Only working with one result while searching for torrents, for the moment but i'll fix that !
 - You can manage only one torrent (the last one that was imported), for the moment but i'll fix that too!
