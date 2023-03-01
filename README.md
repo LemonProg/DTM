@@ -6,4 +6,6 @@ Using :
 - Torrent-search API to search torrents on severals providers
 - qBittorent API to download the torrents
 
-Only working with one result while searching for torrents, for the moment but i'll fix that !
+Some issues :
+- Only working with one result while searching for torrents, for the moment but i'll fix that !
+- You can manage only one torrent (the last one that was imported), for the moment but i'll fix that too!
