@@ -43,13 +43,13 @@ It's exactly the same thing but it doesn't support the discord bot part
 # Providers Custom
 You can modify the providers list, torrent-api-search nativly includes :
 
-- TorrentLeech: (need cookie authentification to work)
-- IpTorrents: (need credentials and cookie authentification to work)
+- TorrentLeech: (needs cookie authentification to work)
+- IpTorrents: (needs credentials and cookie authentification to work)
 - Torrent9
 - Torrentz2
 - 1337x
 - ThePirateBay
-- YggTorrent (need credentials and cookie authentification to work)
+- YggTorrent (needs credentials and cookie authentification to work)
 - KickassTorrents
 - Rarbg
 - TorrentProject
