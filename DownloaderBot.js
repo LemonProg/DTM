@@ -3,7 +3,7 @@ const { qBittorrentClient } = require('@robertklep/qbittorrent');
 const config = require('./config');
 
 // QBittorent Connexion
-const client = new qBittorrentClient('http://127.0.0.1:8080', 'admin', config.qbt_password);
+const client = new qBittorrentClient(config.qbt_host, 'admin', config.qbt_password);
 
 // Discord needed libs
 const discord = require('discord.js');
@@ -100,6 +100,16 @@ bot.on('ready', async () => {
             if (isProviderActive.length === 0) {
                 searchQuery.reply('You have to use **!provider** before using this command');
             } else {
+                // Verifing if a search already exist
+                if (searchList.length > 1) {
+                    // clear the old list of result
+                    searchList = [];
+                } 
+                if (magnets.length > 1) {
+                    // clear the old list of magnets for the result
+                    magnets = [];
+                }
+
                 searchQuery.reply('Searching...')
 
                 // Cutting the '!search torrentName' string to return only 'torrentName'

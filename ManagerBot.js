@@ -10,7 +10,7 @@ const bot = new discord.Client({intents});
 bot.login(config.token);
 
 bot.on('ready', async () => {
-    api.connect('http://127.0.0.1:8080', 'admin', config.qbt_password)
+    api.connect(config.qbt_host, 'admin', config.qbt_password)
         .then(qbt => {
                 const channel = bot.channels.cache.get('1079799579211468852');
                 console.log("En ligne !");
