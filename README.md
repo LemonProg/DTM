@@ -39,3 +39,26 @@ You can run the downloader CLI version with :
   node DownloaderShell.js
 ```
 It's exactly the same thing but it doesn't support the discord bot part
+
+# Providers Custom
+You can modify the providers list, torrent-api-search nativly includes :
+
+- TorrentLeech: (need cookie authentification to work)
+- IpTorrents: (need credentials and cookie authentification to work)
+- Torrent9
+- Torrentz2
+- 1337x
+- ThePirateBay
+- YggTorrent (need credentials and cookie authentification to work)
+- KickassTorrents
+- Rarbg
+- TorrentProject
+- Yts
+- Limetorrents
+- Eztv
+
+You just have to edit "*DownloaderBot.js*" : 
+```bash
+  let providerList = ["Torrent9", "ThePirateBay", "1337x", "ADD THEM LIKES THAT"]
+```
+If you need to add a specific provider that not inculded in the lib, go read the "*torrent-search-api*" npm package
