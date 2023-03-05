@@ -51,7 +51,8 @@ bot.on('ready', async () => {
         // Asking for the user type !searchTorrent
         if (providerList.includes(interaction.values[0])) {
             TorrentSearchApi.enableProvider(interaction.values);
-            await interaction.reply('Now enter **!search torrentName** to search For a Film or a Serie');
+            let currentProvider = TorrentSearchApi.getActiveProviders();
+            await interaction.reply(`Now enter **!search torrentName** to search on ${currentProvider[0].name}`);
         } else {
             // When the user select a torrent from the list after the search
             choosedMagnet = magnets[interaction.values[0]];
