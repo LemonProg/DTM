@@ -6,7 +6,7 @@ Dependencies :
 - Torrent-search API to search torrents on severals providers
 - qBittorent API to download the torrents
 
-Use this command to install all dependencies
+Use this command to install all the dependencies
 ```bash
   npm install
 ```
