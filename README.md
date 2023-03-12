@@ -1,5 +1,5 @@
 # DTM
-Discord-Torrents-Manager (DTM) is a vanilla javascript project to download and manage torrents from a discord server
+Discord-Torrents-Manager (DTM) is a nodejs project to download and manage torrents from a discord server
 
 Dependencies : 
 - Discord JS API to communicate throught the discord server
